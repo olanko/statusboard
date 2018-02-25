@@ -12,8 +12,8 @@ config :logger, level: :warn
 # Configure your database
 config :statusboard, Statusboard.Repo,
   adapter: Ecto.Adapters.Postgres,
-  username: "postgres",
-  password: "postgres",
+  username: "olli",
+  password: "",
   database: "statusboard_test",
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox
