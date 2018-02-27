@@ -42,15 +42,17 @@ defmodule Statusboard.Status do
     def update(key, statusvalue) do
         statusitem = Repo.get_by(StatusItem, item_id: key)
 
-        if statusitem == nil do
-            statusitem = %StatusItem{item_id: key, name: to_string(key), status: statusvalue}
+        statusitem = case statusitem do
+            nil -> %StatusItem{item_id: key, name: to_string(key), status: statusvalue}
+            _ -> statusitem
         end
 
         changeset = statusitem
             |> Ecto.Changeset.change(status: statusvalue)
 
-        if changeset.valid? do
-            statusitem = changeset |> Repo.insert_or_update
+        statusitem = case changeset.valid? do
+            true -> changeset |> Repo.insert_or_update
+            false -> statusitem
         end
 
         Agent.update(@name, fn state -> Map.update(state, key, statusitem, fn _x -> statusitem end) end)
